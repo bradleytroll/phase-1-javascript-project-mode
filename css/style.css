@@ -16,7 +16,7 @@ h1 {
 }
 
 blockquote {
-  background-color: #83abbe;
+  background-color: #89e1d9;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 8px;
@@ -27,7 +27,50 @@ blockquote p {
   margin: 0;
 }
 
-blockquote p:last-child {
-  margin-top: 10px;
+
+
+blockquote p::after {
+  content: "";
+  display: block;
+  margin-bottom: 10px;
 }
+
+/* CSS for the like and dislike buttons */
+button {
+  margin-right: 5px;
+}
+
+.liked {
+  background-color: #c6e5cc; /* Light green for liked quotes */
+}
+
+.disliked {
+  background-color: #e5cccc; /* Light red for disliked quotes */
+}
+
+/* ... (existing CSS) */
+
+button {
+    margin-right: 5px;
+}
+
+.liked {
+    background-color: #c6e5cc; /* Light green for liked quotes */
+}
+
+.disliked {
+    background-color: #e5cccc; /* Light red for disliked quotes */
+}
+
+/* Style for the comment form */
+form {
+    margin-top: 10px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 5px;
+}
+
+
 
