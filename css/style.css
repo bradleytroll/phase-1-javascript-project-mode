@@ -1,0 +1,33 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px 0;
+}
+
+#quote-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+blockquote {
+  background-color: #83abbe;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+blockquote p {
+  margin: 0;
+}
+
+blockquote p:last-child {
+  margin-top: 10px;
+}
+
