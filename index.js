@@ -6,12 +6,23 @@ function getFiveQuotes() {
         .then(response => response.json())
         .then(data => {
             if (data.results && Array.isArray(data.results)) {
-                renderQuotes(data.results);
+                // Shuffle the quotes randomly
+                const shuffledQuotes = shuffleArray(data.results);
+                renderQuotes(shuffledQuotes);
             } else {
                 console.error('Invalid data format received:', data);
             }
         })
         .catch(error => console.error('Error fetching quotes:', error));
+}
+
+// Function to shuffle an array using the Fisher-Yates Shuffle algorithm
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 // Function to display quotes on the page
@@ -37,6 +48,7 @@ function renderQuotes(quotesData) {
 
 // Load 5 quotes on page load
 getFiveQuotes();
+
 
 
 
