@@ -117,12 +117,45 @@ function displayComments(quoteElement, comments) {
     });
 
     // Append the new comments to the quote element
-    comments.forEach(comment => {
+    comments.forEach((comment, index) => {
         let commentElement = document.createElement('p');
         commentElement.innerText = 'Comment: ' + comment;
         commentElement.classList.add('comment');
+
+        // Create the delete button for each comment
+        let deleteButton = document.createElement('button');
+        deleteButton.innerText = 'x'; // Set the delete button text to 'x'
+        deleteButton.classList.add('delete-button');
+
+        // Add event listener to handle comment deletion
+        deleteButton.addEventListener('click', () => {
+            deleteComment(quoteElement, index);
+        });
+
+        // Append the delete button to the comment element
+        commentElement.appendChild(deleteButton);
+
         quoteElement.appendChild(commentElement);
     });
+}
+
+// Function to handle deleting a comment
+function deleteComment(quoteElement, commentIndex) {
+    const quoteId = quoteElement.dataset.id;
+
+    // Load existing comments for this quote from local storage
+    let comments = JSON.parse(localStorage.getItem('quote_comments')) || {};
+
+    if (comments[quoteId]) {
+        // Remove the comment from the comments array
+        comments[quoteId].splice(commentIndex, 1);
+
+        // Update the comments in local storage
+        localStorage.setItem('quote_comments', JSON.stringify(comments));
+
+        // Display the updated comments for this quote
+        displayComments(quoteElement, comments[quoteId]);
+    }
 }
 
 // Function to handle submitting a comment
@@ -195,6 +228,17 @@ function renderQuotes(quotesData) {
         quoteElement.appendChild(commentForm);
 
         container.appendChild(quoteElement);
+
+        // Load existing like/dislike counter data for this quote from local storage
+        let counters = JSON.parse(localStorage.getItem('quote_counters')) || {};
+        if (counters[index]) {
+            quoteCounterElement.innerText = 'Likes - Dislikes: ' + (counters[index].likes - counters[index].dislikes);
+            if (counters[index].likes - counters[index].dislikes > 0) {
+                quoteElement.classList.add('liked');
+            } else if (counters[index].likes - counters[index].dislikes < 0) {
+                quoteElement.classList.add('disliked');
+            }
+        }
     });
 
     // Load existing comments for all quotes from local storage
