@@ -57,12 +57,72 @@ function addLikeDislikeButtons(quoteElement) {
 function likeQuote(quoteElement) {
     quoteElement.classList.add('liked');
     quoteElement.classList.remove('disliked');
+    updateQuoteCounter(quoteElement);
 }
 
 // Function to handle disliking a quote
 function dislikeQuote(quoteElement) {
     quoteElement.classList.add('disliked');
     quoteElement.classList.remove('liked');
+    updateQuoteCounter(quoteElement);
+}
+
+// Function to update the like/dislike counter for a quote
+function updateQuoteCounter(quoteElement) {
+    const likeButton = quoteElement.querySelector('.like-button');
+    const dislikeButton = quoteElement.querySelector('.dislike-button');
+
+    const quoteId = quoteElement.dataset.id;
+    const quoteCounterElement = quoteElement.querySelector('.quote-counter');
+
+    // Check if the quote has been liked
+    const isLiked = quoteElement.classList.contains('liked');
+    // Check if the quote has been disliked
+    const isDisliked = quoteElement.classList.contains('disliked');
+
+    // Load existing counter data for this quote from local storage
+    let counters = JSON.parse(localStorage.getItem('quote_counters')) || {};
+    if (!counters[quoteId]) {
+        counters[quoteId] = {
+            likes: 0,
+            dislikes: 0,
+        };
+    }
+
+    // Update the like and dislike counts
+    if (isLiked) {
+        counters[quoteId].likes++;
+        if (isDisliked) {
+            counters[quoteId].dislikes--;
+        }
+    } else if (isDisliked) {
+        counters[quoteId].dislikes++;
+    } else {
+        counters[quoteId].likes--;
+    }
+
+    // Update the counters in local storage
+    localStorage.setItem('quote_counters', JSON.stringify(counters));
+
+    // Update the counter text on the quote element
+    quoteCounterElement.innerText = 'Likes - Dislikes: ' + (counters[quoteId].likes - counters[quoteId].dislikes);
+}
+
+// Function to display comments for a specific quote
+function displayComments(quoteElement, comments) {
+    // Clear existing comments from the quote element
+    const existingComments = quoteElement.querySelectorAll('.comment');
+    existingComments.forEach(comment => {
+        comment.remove();
+    });
+
+    // Append the new comments to the quote element
+    comments.forEach(comment => {
+        let commentElement = document.createElement('p');
+        commentElement.innerText = 'Comment: ' + comment;
+        commentElement.classList.add('comment');
+        quoteElement.appendChild(commentElement);
+    });
 }
 
 // Function to handle submitting a comment
@@ -81,11 +141,8 @@ function submitComment(quoteElement, comment) {
     // Update the comments in local storage
     localStorage.setItem('quote_comments', JSON.stringify(comments));
 
-    // Create a new paragraph element to display the comment
-    let commentElement = document.createElement('p');
-    commentElement.innerText = 'Comment: ' + comment;
-    commentElement.classList.add('comment');
-    quoteElement.appendChild(commentElement);
+    // Display the updated comments for this quote
+    displayComments(quoteElement, comments[quoteId]);
 }
 
 // Function to display quotes on the page
@@ -114,6 +171,13 @@ function renderQuotes(quotesData) {
 
         addLikeDislikeButtons(quoteElement); // Call the function to add like/dislike buttons
 
+        // Create the counter element and set its initial value to 0
+        let quoteCounterElement = document.createElement('p');
+        quoteCounterElement.innerText = 'Likes - Dislikes: 0';
+        quoteCounterElement.classList.add('quote-counter');
+
+        quoteElement.appendChild(quoteCounterElement);
+
         // Create the comment form and append it to the quote element
         let commentForm = document.createElement('form');
         commentForm.classList.add('comment-form');
@@ -130,15 +194,16 @@ function renderQuotes(quotesData) {
         commentForm.appendChild(commentSubmitButton);
         quoteElement.appendChild(commentForm);
 
-        // Load existing comments for this quote from local storage
-        let comments = JSON.parse(localStorage.getItem('quote_comments')) || {};
-        if (comments[index]) {
-            comments[index].forEach(comment => {
-                submitComment(quoteElement, comment);
-            });
-        }
-
         container.appendChild(quoteElement);
+    });
+
+    // Load existing comments for all quotes from local storage
+    let comments = JSON.parse(localStorage.getItem('quote_comments')) || {};
+    Object.keys(comments).forEach(quoteId => {
+        const quoteElement = container.querySelector(`[data-id="${quoteId}"]`);
+        if (quoteElement) {
+            displayComments(quoteElement, comments[quoteId]);
+        }
     });
 
     // Add event listener to handle comment submission
