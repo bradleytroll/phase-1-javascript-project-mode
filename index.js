@@ -6,9 +6,7 @@ function getFiveQuotes() {
         .then(response => response.json())
         .then(data => {
             if (data.results && Array.isArray(data.results)) {
-                // Shuffle the quotes randomly
-                const shuffledQuotes = shuffleArray(data.results);
-                renderQuotes(shuffledQuotes);
+                renderQuotes(data.results); // Render all the fetched quotes
             } else {
                 console.error('Invalid data format received:', data);
             }
@@ -25,61 +23,9 @@ function shuffleArray(array) {
     return array;
 }
 
-// Function to display quotes on the page
-function renderQuotes(quotesData) {
-    let container = document.getElementById('quote-container');
-
-    quotesData.forEach(quoteData => {
-        let quoteElement = document.createElement('blockquote');
-        quoteElement.innerText = quoteData.content;
-
-        let authorElement = document.createElement('p');
-        authorElement.innerText = "Quote by - " + quoteData.author;
-
-        let tagsElement = document.createElement('p');
-        tagsElement.innerText = "Tags: " + (quoteData.tags ? quoteData.tags.join(', ') : 'N/A');
-
-        quoteElement.appendChild(authorElement);
-        quoteElement.appendChild(tagsElement);
-
-        container.appendChild(quoteElement);
-    });
-}
-
-// Load 5 quotes on page load
-getFiveQuotes();
-
-
-// ... (existing functions: getFiveQuotes, shuffleArray)
-
 // Function to create and add like/dislike buttons to each quote
 function addLikeDislikeButtons(quoteElement) {
-    const likeButton = document.createElement('button');
-    likeButton.innerText = 'Like';
-    likeButton.classList.add('like-button');
-
-    const dislikeButton = document.createElement('button');
-    dislikeButton.innerText = 'Dislike';
-    dislikeButton.classList.add('dislike-button');
-
-    // Wrap the quote text in a separate <p> element
-    const quoteTextElement = document.createElement('p');
-    quoteTextElement.innerText = quoteElement.innerText;
-    quoteElement.innerHTML = ''; // Clear the inner content of the quoteElement
-
-    // Append the wrapped quote text and buttons to the quoteElement
-    quoteElement.appendChild(quoteTextElement);
-    quoteElement.appendChild(likeButton);
-    quoteElement.appendChild(dislikeButton);
-
-    // Add event listeners to the buttons
-    likeButton.addEventListener('click', () => {
-        likeQuote(quoteElement);
-    });
-
-    dislikeButton.addEventListener('click', () => {
-        dislikeQuote(quoteElement);
-    });
+    // ... (existing code to create like/dislike buttons and wrap the quote text)
 }
 
 // Function to handle liking a quote
@@ -98,7 +44,13 @@ function dislikeQuote(quoteElement) {
 function renderQuotes(quotesData) {
     let container = document.getElementById('quote-container');
 
-    quotesData.forEach(quoteData => {
+    // Remove existing quotes if any
+    container.innerHTML = '';
+
+    // Get the first 5 quotes from the array (if there are more than 5)
+    const fiveQuotes = quotesData.slice(0, 5);
+
+    fiveQuotes.forEach(quoteData => {
         let quoteElement = document.createElement('blockquote');
         quoteElement.innerText = quoteData.content;
 
@@ -113,11 +65,49 @@ function renderQuotes(quotesData) {
 
         addLikeDislikeButtons(quoteElement); // Call the function to add like/dislike buttons
 
+        // Create the comment form and append it to the quote element
+        let commentForm = document.createElement('form');
+        commentForm.classList.add('comment-form');
+
+        let commentInput = document.createElement('input');
+        commentInput.type = 'text';
+        commentInput.placeholder = 'Leave a comment...';
+
+        let commentSubmitButton = document.createElement('button');
+        commentSubmitButton.type = 'submit';
+        commentSubmitButton.innerText = 'Submit';
+
+        commentForm.appendChild(commentInput);
+        commentForm.appendChild(commentSubmitButton);
+        quoteElement.appendChild(commentForm);
+
         container.appendChild(quoteElement);
     });
 }
 
+// Add event listener to handle comment submission
+function addCommentFormListener() {
+    const commentForms = document.querySelectorAll('.comment-form');
+    commentForms.forEach(commentForm => {
+        commentForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const inputField = event.target.querySelector('input[type="text"]');
+            const comment = inputField.value;
+            if (comment.trim() !== '') {
+                submitComment(event.target.parentElement, comment);
+                inputField.value = ''; // Clear the input field after submission
+            }
+        });
+    });
+}
+
+// Function to handle submitting a comment
+function submitComment(quoteElement, comment) {
+    let commentElement = document.createElement('p');
+    commentElement.innerText = 'Comment: ' + comment;
+    commentElement.classList.add('comment');
+    quoteElement.appendChild(commentElement);
+}
+
 // Load 5 quotes on page load
 getFiveQuotes();
-
-// ... (existing event listener for like/dislike buttons)
