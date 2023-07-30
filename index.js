@@ -7,7 +7,6 @@ function getFiveQuotes() {
       .then(data => {
         if (data.results && Array.isArray(data.results)) {
           renderQuotes(data.results); // Render all the fetched quotes
-          addMouseOverOutListeners(); // Add mouseover and mouseout listeners to the rendered quotes
         } else {
           console.error('Invalid data format received:', data);
         }
@@ -195,15 +194,21 @@ function getFiveQuotes() {
   
     fiveQuotes.forEach((quoteData, index) => {
       let quoteElement = document.createElement('blockquote');
-      quoteElement.innerText = quoteData.content;
       quoteElement.dataset.id = index; // Set a unique identifier (index) for each quote
+  
+      let quoteContentElement = document.createElement('p');
+      quoteContentElement.innerText = quoteData.content;
+      quoteContentElement.classList.add('quote-content');
   
       let authorElement = document.createElement('p');
       authorElement.innerText = 'Quote by - ' + quoteData.author;
+      authorElement.classList.add('quote-author');
   
       let tagsElement = document.createElement('p');
       tagsElement.innerText = 'Tags: ' + (quoteData.tags ? quoteData.tags.join(', ') : 'N/A');
+      tagsElement.classList.add('quote-tags');
   
+      quoteElement.appendChild(quoteContentElement);
       quoteElement.appendChild(authorElement);
       quoteElement.appendChild(tagsElement);
   
@@ -244,6 +249,10 @@ function getFiveQuotes() {
           quoteElement.classList.add('disliked');
         }
       }
+  
+      // Add event listeners for mouseover and mouseout events on the quote
+      quoteElement.addEventListener('mouseover', handleQuoteMouseOver);
+      quoteElement.addEventListener('mouseout', handleQuoteMouseOut);
     });
   
     // Load existing comments for all quotes from local storage
@@ -259,23 +268,14 @@ function getFiveQuotes() {
     addCommentFormListener();
   }
   
-  // Function to add mouseover and mouseout event listeners to the quote elements
-  function addMouseOverOutListeners() {
-    const quotes = document.querySelectorAll('blockquote');
-    quotes.forEach(quote => {
-      quote.addEventListener('mouseover', handleQuoteMouseOver);
-      quote.addEventListener('mouseout', handleQuoteMouseOut);
-    });
-  }
-  
-  // Function to handle mouseover event on quote
+  // Add event listener to handle mouseover event on quote
   function handleQuoteMouseOver(event) {
     // Store the original background color before applying the visual effect
     event.target.dataset.originalColor = event.target.style.backgroundColor;
     event.target.style.backgroundColor = 'lightgray';
   }
   
-  // Function to handle mouseout event on quote
+  // Add event listener to handle mouseout event on quote
   function handleQuoteMouseOut(event) {
     // Reset the background color to its original color when the mouse pointer leaves the quote
     event.target.style.backgroundColor = event.target.dataset.originalColor;
