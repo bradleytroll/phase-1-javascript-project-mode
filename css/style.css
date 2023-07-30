@@ -8,6 +8,7 @@ body {
 h1 {
   text-align: center;
   padding: 20px 0;
+  font-family: "Lucida Handwriting", cursive; /* Use Lucida Handwriting font for h1 element */
 }
 
 #quote-container {
@@ -26,8 +27,6 @@ blockquote {
 blockquote p {
   margin: 0;
 }
-
-
 
 blockquote p::after {
   content: "";
@@ -51,26 +50,23 @@ button {
 /* ... (existing CSS) */
 
 button {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .liked {
-    background-color: #c6e5cc; /* Light green for liked quotes */
+  background-color: #c6e5cc; /* Light green for liked quotes */
 }
 
 .disliked {
-    background-color: #e5cccc; /* Light red for disliked quotes */
+  background-color: #e5cccc; /* Light red for disliked quotes */
 }
 
 /* Style for the comment form */
 form {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 input[type="text"] {
-    width: 100%;
-    padding: 5px;
+  width: 100%;
+  padding: 5px;
 }
-
-
-
