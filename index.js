@@ -7,6 +7,7 @@ function getFiveQuotes() {
       .then(data => {
         if (data.results && Array.isArray(data.results)) {
           renderQuotes(data.results); // Render all the fetched quotes
+          addMouseOverOutListeners(); // Add mouseover and mouseout listeners to the rendered quotes
         } else {
           console.error('Invalid data format received:', data);
         }
@@ -291,6 +292,15 @@ function getFiveQuotes() {
   function handleQuoteMouseOut(event) {
     // Reset the visual effect when the mouse pointer leaves the quote
     event.target.style.backgroundColor = '#89e1d9';
+  }
+
+  // Function to add mouseover and mouseout event listenersto the quote elements
+  function addMouseOverOutListeners() {
+    const quotes = document.querySelectorAll('blockquote');
+    quotes.forEach(quote => {
+        quote.addEventListener('mouseover', handleQuoteMouseOver);
+        quote.addEventListener('mouseout', handleQuoteMouseOut);
+    });
   }
   
   // Load 5 quotes on page load
