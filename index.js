@@ -40,6 +40,29 @@ function dislikeQuote(quoteElement) {
     quoteElement.classList.remove('liked');
 }
 
+// Function to handle submitting a comment
+function submitComment(quoteElement, comment) {
+    // Check if comments exist for this quote in local storage
+    let comments = JSON.parse(localStorage.getItem('quote_comments')) || {};
+
+    const quoteId = quoteElement.dataset.id;
+
+    // Add the comment to the corresponding quote's comments array
+    if (!comments[quoteId]) {
+        comments[quoteId] = [];
+    }
+    comments[quoteId].push(comment);
+
+    // Update the comments in local storage
+    localStorage.setItem('quote_comments', JSON.stringify(comments));
+
+    // Create a new paragraph element to display the comment
+    let commentElement = document.createElement('p');
+    commentElement.innerText = 'Comment: ' + comment;
+    commentElement.classList.add('comment');
+    quoteElement.appendChild(commentElement);
+}
+
 // Function to display quotes on the page
 function renderQuotes(quotesData) {
     let container = document.getElementById('quote-container');
@@ -50,9 +73,10 @@ function renderQuotes(quotesData) {
     // Get the first 5 quotes from the array (if there are more than 5)
     const fiveQuotes = quotesData.slice(0, 5);
 
-    fiveQuotes.forEach(quoteData => {
+    fiveQuotes.forEach((quoteData, index) => {
         let quoteElement = document.createElement('blockquote');
         quoteElement.innerText = quoteData.content;
+        quoteElement.dataset.id = index; // Set a unique identifier (index) for each quote
 
         let authorElement = document.createElement('p');
         authorElement.innerText = "Quote by - " + quoteData.author;
@@ -81,8 +105,19 @@ function renderQuotes(quotesData) {
         commentForm.appendChild(commentSubmitButton);
         quoteElement.appendChild(commentForm);
 
+        // Load existing comments for this quote from local storage
+        let comments = JSON.parse(localStorage.getItem('quote_comments')) || {};
+        if (comments[index]) {
+            comments[index].forEach(comment => {
+                submitComment(quoteElement, comment);
+            });
+        }
+
         container.appendChild(quoteElement);
     });
+
+    // Add event listener to handle comment submission
+    addCommentFormListener();
 }
 
 // Add event listener to handle comment submission
@@ -99,14 +134,6 @@ function addCommentFormListener() {
             }
         });
     });
-}
-
-// Function to handle submitting a comment
-function submitComment(quoteElement, comment) {
-    let commentElement = document.createElement('p');
-    commentElement.innerText = 'Comment: ' + comment;
-    commentElement.classList.add('comment');
-    quoteElement.appendChild(commentElement);
 }
 
 // Load 5 quotes on page load
