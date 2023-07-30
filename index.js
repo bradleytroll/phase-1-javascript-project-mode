@@ -58,6 +58,7 @@ function likeQuote(quoteElement) {
     quoteElement.classList.add('liked');
     quoteElement.classList.remove('disliked');
     updateQuoteCounter(quoteElement);
+    alert('Thank you for voting!');
 }
 
 // Function to handle disliking a quote
@@ -65,6 +66,7 @@ function dislikeQuote(quoteElement) {
     quoteElement.classList.add('disliked');
     quoteElement.classList.remove('liked');
     updateQuoteCounter(quoteElement);
+    alert('Thank you for voting!');
 }
 
 // Function to update the like/dislike counter for a quote
@@ -176,6 +178,8 @@ function submitComment(quoteElement, comment) {
 
     // Display the updated comments for this quote
     displayComments(quoteElement, comments[quoteId]);
+
+    alert('Thank you for submitting a comment!');
 }
 
 // Function to display quotes on the page
