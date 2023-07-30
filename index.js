@@ -25,7 +25,32 @@ function shuffleArray(array) {
 
 // Function to create and add like/dislike buttons to each quote
 function addLikeDislikeButtons(quoteElement) {
-    // ... (existing code to create like/dislike buttons and wrap the quote text)
+    const likeButton = document.createElement('button');
+    likeButton.innerText = 'Like';
+    likeButton.classList.add('like-button');
+
+    const dislikeButton = document.createElement('button');
+    dislikeButton.innerText = 'Dislike';
+    dislikeButton.classList.add('dislike-button');
+
+    // Wrap the quote text in a separate <p> element
+    const quoteTextElement = document.createElement('p');
+    quoteTextElement.innerText = quoteElement.innerText;
+    quoteElement.innerHTML = ''; // Clear the inner content of the quoteElement
+
+    // Append the wrapped quote text and buttons to the quoteElement
+    quoteElement.appendChild(quoteTextElement);
+    quoteElement.appendChild(likeButton);
+    quoteElement.appendChild(dislikeButton);
+
+    // Add event listeners to the buttons
+    likeButton.addEventListener('click', () => {
+        likeQuote(quoteElement);
+    });
+
+    dislikeButton.addEventListener('click', () => {
+        dislikeQuote(quoteElement);
+    });
 }
 
 // Function to handle liking a quote
