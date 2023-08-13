@@ -173,15 +173,17 @@ function submitComment(quoteElement, comment) {
   alert('Thank you for submitting a comment!');
 }
 
-// Function to display quotes on the page
 function renderQuotes(quotesData) {
   let container = document.getElementById('quote-container');
 
   // Remove existing quotes if any
   container.innerHTML = '';
 
-  // Get the first 5 quotes from the array (if there are more than 5)
-  const fiveQuotes = quotesData.slice(0, 5);
+  // Shuffle the quotesData array using the Fisher-Yates Shuffle algorithm
+  const shuffledQuotes = shuffleArray(quotesData);
+
+  // Get the first 5 quotes from the shuffled array
+  const fiveQuotes = shuffledQuotes.slice(0, 5);
 
   fiveQuotes.forEach((quoteData, index) => {
     let quoteElement = document.createElement('blockquote');
@@ -261,6 +263,16 @@ function renderQuotes(quotesData) {
   // Add event listener to handle comment submission
   addCommentFormListener();
 }
+
+// Fisher-Yates Shuffle algorithm to shuffle an array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 
 // Add event listener to handle mouseover event on quote
 function handleQuoteMouseOver(event) {
