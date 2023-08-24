@@ -94,10 +94,8 @@ function updateQuoteCounter(quoteElement) {
     counters[quoteId].likes--;
   }
 
-  // Update the counters in local storage
   localStorage.setItem('quote_counters', JSON.stringify(counters));
 
-  // Update the counter text on the quote element
   quoteCounterElement.innerText = 'Likes - Dislikes: ' + (counters[quoteId].likes - counters[quoteId].dislikes);
 }
 
