@@ -51,13 +51,7 @@ button {
   margin-right: 5px;
 }
 
-.liked {
-  background-color: #c6e5cc; /* Light green for liked quotes */
-}
 
-.disliked {
-  background-color: #e5cccc; /* Light red for disliked quotes */
-}
 
 /* Style for the comment form */
 form {
